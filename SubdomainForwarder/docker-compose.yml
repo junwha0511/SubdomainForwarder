@@ -5,34 +5,43 @@ services:
     ports:
       - '80:80'
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - /home/ubuntu/TestServer/Server/static/:/static
+      - type: bind
+        source: /home/ubuntu/SubdomainForwarder/nginx/nginx.conf
+        target: /etc/nginx/nginx.conf
+      - ../TestServer/Server/static/:/static
     depends_on:
       - tbserver
       - survey
+      - web
 
   tbserver:
     build:
-      context: /home/ubuntu/TestServer/Server/
+      context: ../TestServer/Server/
       dockerfile: Dockerfile
     command: >
       sh -c " python manage.py collectstatic --no-input &&
               daphne -b 0.0.0.0 -p 8000 TBserver.asgi:application"
     volumes: 
-      - /home/ubuntu/TestServer/Server/static/:/source/TBserver/.static_root
+      - ../TestServer/Server/static/:/source/TBserver/.static_root
     expose:
       - '8000'
 
 
   survey:
     build:
-      context: /home/ubuntu/SurveyServer/hackaton-server/
+      context: ../SurveyServer/hackaton-server/
       dockerfile: Dockerfile
     command: >
       sh -c " python run.py"
     expose:
-      - '7777'
+      - '8080'
 
-    
-    
+  web:
+    build:
+      context: ../hackathon_frontend/
+      dockerfile: Dockerfile
+    expose:
+      - '3000'    
+  
         
+
