@@ -34,6 +34,8 @@ services:
       dockerfile: Dockerfile
     command: >
       sh -c " python run.py"
+    volumes:
+      - ../SurveyServer/hackaton-server/:/source/my.db
     expose:
       - '8080'
 
