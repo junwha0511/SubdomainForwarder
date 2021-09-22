@@ -8,6 +8,7 @@ services:
       - type: bind
         source: /home/ubuntu/SubdomainForwarder/nginx/nginx.conf
         target: /etc/nginx/nginx.conf
+      - ./log/nginx:/var/log/nginx
       - ../TestServer/Server/static/:/static
     depends_on:
       - tbserver
@@ -33,6 +34,8 @@ services:
       dockerfile: Dockerfile
     command: >
       sh -c " python run.py"
+    volumes:
+      - ../SurveyServer/hackaton-server/:/source/my.db
     expose:
       - '8080'
 
